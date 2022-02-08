@@ -15,6 +15,7 @@ Supported formats:
     <RepositoryType>github</RepositoryType>
     <PackageTags>tags</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
