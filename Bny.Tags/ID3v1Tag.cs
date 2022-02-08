@@ -88,18 +88,6 @@ public class ID3v1Tag : ITag
         "Track:n" => Track,
         _ => null,
     };
-
-    public string? TagType(string tagId) => tagId switch
-    {
-        "Title" => "s",
-        "Artist" => "s",
-        "Year" => "s",
-        "Comment" => "s",
-        "Genre" => "ID3v1",
-        "Track" => "b",
-        _ => null,
-    };
-
 }
 
 public enum ID3v1Genre : byte
