@@ -5,6 +5,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Version>0.1.0</Version>
+    <Authors>BonnyAD9</Authors>
+    <Description>Allows to read tags from files
+Supported formats:
+- ID3v1 and ID3v1.1 (mp3)</Description>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/BonnyAD9/Bny.Tags</RepositoryUrl>
+    <RepositoryType>github</RepositoryType>
+    <PackageTags>tags</PackageTags>
+    <PackageLicenseFile>X:\Files\Programming\C#\Bny.Tags\LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
