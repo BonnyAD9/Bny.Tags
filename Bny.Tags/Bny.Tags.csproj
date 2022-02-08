@@ -14,7 +14,7 @@ Supported formats:
     <RepositoryUrl>https://github.com/BonnyAD9/Bny.Tags</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
     <PackageTags>tags</PackageTags>
-    <PackageLicenseFile>X:\Files\Programming\C#\Bny.Tags\LICENSE</PackageLicenseFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
