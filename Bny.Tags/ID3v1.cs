@@ -5,7 +5,7 @@ public static class ID3v1
     public const int size = 128;
     public const string id = "TAG";
 
-    public static bool Read(IID3v1Tag tag, string file)
+    public static bool Read(ITag tag, string file)
     {
         if (!File.Exists(file))
             return false;
@@ -14,7 +14,7 @@ public static class ID3v1
         return Read(tag, fs);
     }
 
-    private static bool Read(IID3v1Tag tag, Stream stream)
+    private static bool Read(ITag tag, Stream stream)
     {
         stream.Seek(-size, SeekOrigin.End);
         byte[] buffer = new byte[size];
@@ -32,23 +32,23 @@ public static class ID3v1
         return true;
     }
 
-    private static void FromBytes(IID3v1Tag tag, ReadOnlySpan<byte> data)
+    private static void FromBytes(ITag tag, ReadOnlySpan<byte> data)
     {
-        tag.Title = data.FromAsciiTrimmed(3..33);
-        tag.Artist = data.FromAsciiTrimmed(33..63);
-        tag.Album = data.FromAsciiTrimmed(63..93);
-        tag.Year = data.FromAsciiTrimmed(93..97);
+        tag.SetTag(data.FromAsciiTrimmed(3..33), "Title");
+        tag.SetTag(data.FromAsciiTrimmed(33..63), "Artist");
+        tag.SetTag(data.FromAsciiTrimmed(63..93), "Album");
+        tag.SetTag(data.FromAsciiTrimmed(93..97), "Year");
 
         if (data[125] == 0 && data[126] != 0)
         {
-            tag.Comment = data.FromAsciiTrimmed(97..125);
-            tag.TrackNumber = data[126];
+            tag.SetTag(data.FromAsciiTrimmed(97..125), "Comment");
+            tag.SetTag(data[126], "Track");
         }
         else
         {
-            tag.Comment = data.FromAsciiTrimmed(97..127);
+            tag.SetTag(data.FromAsciiTrimmed(97..127), "Comment");
         }
 
-        tag.GenreEnum = (ID3v1Genre)data[127];
+        tag.SetTag((ID3v1Genre)data[127], "Genre");
     }
 }
