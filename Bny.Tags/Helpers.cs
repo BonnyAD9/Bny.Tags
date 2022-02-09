@@ -15,8 +15,8 @@ internal static class Helpers
         return Encoding.Unicode.GetString(span);
     }
 
-    public static string ToUTF_16BOM(this ReadOnlySpan<byte> span) => span.ToUTF_16(span[0] == 0xFE && span[1] == 0xFF);
-    public static string ToID3v2_3VariableEncoding(this ReadOnlySpan<byte> span) => span[0] == 0 ? span.ToISO_8859_1() : span.ToUTF_16BOM();
+    public static string ToUTF_16BOM(this ReadOnlySpan<byte> span) => span[2..].ToUTF_16(span[0] == 0xFE && span[1] == 0xFF);
+    public static string ToID3v2_3VariableEncoding(this ReadOnlySpan<byte> span) => span[0] == 0 ? span[1..].ToISO_8859_1() : span[1..].ToUTF_16BOM();
 
     // Always converts in big-endian byte order
     public static ushort ToUInt16(this ReadOnlySpan<byte> span) => span.Length < 2 ? throw new ArgumentException("Given span is too short") : (ushort)(span[0] << 8 | span[1]);
