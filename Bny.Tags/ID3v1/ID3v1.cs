@@ -1,4 +1,4 @@
-﻿namespace Bny.Tags;
+﻿namespace Bny.Tags.ID3v1Tags;
 
 public static class ID3v1
 {

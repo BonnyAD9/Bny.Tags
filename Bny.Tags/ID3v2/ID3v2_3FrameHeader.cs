@@ -1,4 +1,4 @@
-﻿namespace Bny.Tags;
+﻿namespace Bny.Tags.ID3v2Tags;
 
 internal struct ID3v2_3FrameHeader
 {

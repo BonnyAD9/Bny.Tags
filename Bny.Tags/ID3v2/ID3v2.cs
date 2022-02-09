@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Bny.Tags;
+﻿namespace Bny.Tags.ID3v2Tags;
 public static class ID3v2
 {
     public const string id = "ID3";

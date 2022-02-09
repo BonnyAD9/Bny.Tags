@@ -1,4 +1,6 @@
-﻿namespace Bny.Tags;
+﻿using Bny.Tags.ID3v1Tags;
+
+namespace Bny.Tags;
 
 public class Tag : ITag
 {
