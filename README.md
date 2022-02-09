@@ -3,7 +3,7 @@ Library that reads tags from files
 
 ## Currently supported formats
 - ID3v1 and ID3v1.1 (mp3)
-- Basic info from ID3v2.3
+- Basic info from ID3v2.3 (unsynchronization is supported but I was unable to test it)
 
 ## Example
 ```
