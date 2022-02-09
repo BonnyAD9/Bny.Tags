@@ -24,7 +24,7 @@ public static class ID3v1
         
         ReadOnlySpan<byte> spanBuf = buffer.AsSpan();
         
-        if (spanBuf.FromAscii(..3) != id)
+        if (spanBuf[..3].ToAscii() != id)
             return false;
         
         FromBytes(tag, buffer.AsSpan());
@@ -34,19 +34,19 @@ public static class ID3v1
 
     private static void FromBytes(ITag tag, ReadOnlySpan<byte> data)
     {
-        tag.SetTag(data.FromAsciiTrimmed(3..33), "Title");
-        tag.SetTag(data.FromAsciiTrimmed(33..63), "Artist");
-        tag.SetTag(data.FromAsciiTrimmed(63..93), "Album");
-        tag.SetTag(data.FromAsciiTrimmed(93..97), "Year");
+        tag.SetTag(data[3..33].ToAsciiTrimmed(), "Title");
+        tag.SetTag(data[33..63].ToAsciiTrimmed(), "Artist");
+        tag.SetTag(data[63..93].ToAsciiTrimmed(), "Album");
+        tag.SetTag(data[93..97].ToAsciiTrimmed(), "Year");
 
         if (data[125] == 0 && data[126] != 0)
         {
-            tag.SetTag(data.FromAsciiTrimmed(97..125), "Comment");
+            tag.SetTag(data[97..125].ToAsciiTrimmed(), "Comment");
             tag.SetTag(data[126], "Track");
         }
         else
         {
-            tag.SetTag(data.FromAsciiTrimmed(97..127), "Comment");
+            tag.SetTag(data[97..127].ToAsciiTrimmed(), "Comment");
         }
 
         tag.SetTag((ID3v1Genre)data[127], "Genre");

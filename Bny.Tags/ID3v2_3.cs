@@ -51,7 +51,7 @@ public static class ID3v2_3
         switch (header.ID)
         {
             case ID3v2_3FrameHeaderID.TIT2:
-                tag.SetTag(data.FromID3v2_3VariableEncoding(..), "Title");
+                tag.SetTag(data.ToID3v2_3VariableEncoding(), "Title");
                 return ID3v2Error.None;
             default:
                 return ID3v2Error.Unsupported;

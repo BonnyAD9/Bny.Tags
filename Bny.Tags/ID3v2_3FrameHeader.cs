@@ -21,9 +21,9 @@ internal struct ID3v2_3FrameHeader
     {
         ID3v2_3FrameHeader header = new();
 
-        header.ID = (ID3v2_3FrameHeaderID)data.ToUInt32(0..4);
-        header.Size = data.ToUInt32(4..8);
-        header.Flags = (ID3v2_3FrameHeaderFlags)data.ToUInt16(8..10);
+        header.ID = (ID3v2_3FrameHeaderID)data[0..4].ToUInt32();
+        header.Size = data[4..8].ToUInt32();
+        header.Flags = (ID3v2_3FrameHeaderFlags)data[8..10].ToUInt16();
 
         return header;
     }

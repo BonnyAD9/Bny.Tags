@@ -26,7 +26,7 @@ public static class ID3v2
 
         ReadOnlySpan<byte> headerBufSpan = headerBuffer.AsSpan();
 
-        if (headerBufSpan.FromAscii(..3) != id)
+        if (headerBufSpan[..3].ToAscii() != id)
             return ID3v2Error.NotID3;
 
         ID3v2Header header = ID3v2Header.FromBytes(headerBufSpan);

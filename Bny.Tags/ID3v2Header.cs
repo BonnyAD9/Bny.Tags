@@ -12,7 +12,7 @@ internal struct ID3v2Header
     {
         ID3v2Header header = new();
 
-        header.Version = (ID3v2Version)data.ToUInt16(3..5);
+        header.Version = (ID3v2Version)data[3..5].ToUInt16();
         
         header.Flags = (ID3v2HeaderFlags)data[5];
         
