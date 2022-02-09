@@ -4,6 +4,8 @@ public static class ID3v2_3
 {
     internal static ID3v2Error Read(ITag tag, Stream stream, ID3v2Header header)
     {
+        tag.SetTag(null, "init", false);
+
         if (header.Flags != ID3v2HeaderFlags.None)
             return ID3v2Error.Unsupported;
 
@@ -50,11 +52,35 @@ public static class ID3v2_3
 
         switch (header.ID)
         {
-            case ID3v2_3FrameHeaderID.TIT2:
-                tag.SetTag(data.ToID3v2_3VariableEncoding(), "Title");
+            case ID3v2_3FrameHeaderID.TIT2: // Title
+                tag.SetTag(data.ToID3v2_3String(), "Title");
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.TPE1: // Artist
+                tag.SetTag(ReadArtists(data), "Artist", false);
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.TALB: // Album
+                tag.SetTag(data.ToID3v2_3String(), "Album");
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.TYER: // Year
+                tag.SetTag(data.ToID3v2_3String(), "Year");
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.COMM: // Comment
+                tag.SetTag(ID3v2_3Comment.FromBytes(data), "Comment");
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.TRCK: // Track
+                tag.SetTag(data.ToID3v2_3String(), "Track");
+                return ID3v2Error.None;
+            case ID3v2_3FrameHeaderID.TCON: // Genre
+                tag.SetTag(ID3v2_3Genre.FromBytes(data), "Genre");
                 return ID3v2Error.None;
             default:
                 return ID3v2Error.Unsupported;
         }
+    }
+
+    private static string[] ReadArtists(ReadOnlySpan<byte> data)
+    {
+        string str = data.ToID3v2_3String();
+        return str.Split('/');
     }
 }

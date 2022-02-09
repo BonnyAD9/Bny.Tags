@@ -34,6 +34,8 @@ public static class ID3v1
 
     private static void FromBytes(ITag tag, ReadOnlySpan<byte> data)
     {
+        tag.SetTag(null, "init", false);
+
         tag.SetTag(data[3..33].ToAsciiTrimmed(), "Title");
         tag.SetTag(data[33..63].ToAsciiTrimmed(), "Artist");
         tag.SetTag(data[63..93].ToAsciiTrimmed(), "Album");
@@ -49,6 +51,6 @@ public static class ID3v1
             tag.SetTag(data[97..127].ToAsciiTrimmed(), "Comment");
         }
 
-        tag.SetTag((ID3v1Genre)data[127], "Genre");
+        tag.SetTag((ID3v1GenreEnum)data[127], "Genre");
     }
 }

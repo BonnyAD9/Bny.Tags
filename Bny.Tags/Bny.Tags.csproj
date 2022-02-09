@@ -1,14 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>0.3.0.0</Version>
+    <Version>0.4.0.0</Version>
     <Authors>BonnyAD9</Authors>
     <Description>Allows to read tags from files
 Supported formats:
-- ID3v1 and ID3v1.1 (mp3)</Description>
+- ID3v1 and ID3v1.1 (mp3)
+- Basic info from ID3v2.3 (mp3)</Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/BonnyAD9/Bny.Tags</RepositoryUrl>
