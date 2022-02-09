@@ -4,12 +4,19 @@ public static class ID3v2_3
 {
     internal static ID3v2Error Read(ITag tag, Stream read, ID3v2Header header)
     {
-        if (header.Flags.HasFlag(ID3v2HeaderFlags.ExtendedHeader_3) || header.Flags.HasFlag(ID3v2HeaderFlags.Experimental_3))
+        if (header.Flags.HasFlag(ID3v2HeaderFlags.Experimental_3))
             return ID3v2Error.Unsupported;
 
         UnsynchronizedStream stream = new(read, header.Flags.HasFlag(ID3v2HeaderFlags.Unsynchronisation_3));
 
         tag.SetTag(null, "init", false);
+        
+        if (header.Flags.HasFlag(ID3v2HeaderFlags.ExtendedHeader_3))
+        {
+            var exHeader = ID3v2_3ExtendedHeader.FromStream(stream);
+            tag.SetTag(exHeader.CRCData, "CRC");
+        }
+
 
         byte[] headerBuffer = new byte[ID3v2_3FrameHeader.size];
         while (stream.Position + ID3v2_3FrameHeader.size < header.Size)

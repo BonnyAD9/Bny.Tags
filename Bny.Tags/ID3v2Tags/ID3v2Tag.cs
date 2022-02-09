@@ -22,6 +22,7 @@ public class ID3v2Tag : ITag
     }
     public string Track { get; set; } = "";
     public IGenre Genre { get; set; } = new ID3v2_3Genre();
+    public uint CRC { get; set; } = 0;
 
     public bool SetTag(object? tag, string tagId, bool canToString = false)
     {
@@ -49,6 +50,13 @@ public class ID3v2Tag : ITag
                 if (tagId == "Genre")
                 {
                     Genre = g;
+                    return true;
+                }
+                return false;
+            case uint i:
+                if (tagId == "CRC")
+                {
+                    CRC = i;
                     return true;
                 }
                 return false;
@@ -82,6 +90,13 @@ public class ID3v2Tag : ITag
             case "Genre":
                 Genre = new ID3v2_3Genre(str);
                 return true;
+            case "CRC":
+                if (uint.TryParse(str, out uint crc))
+                {
+                    CRC = crc;
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
@@ -96,9 +111,11 @@ public class ID3v2Tag : ITag
         "Comment" => Comment,
         "Track" => Track,
         "Genre" => Genre.Name,
+        "CRC" => CRC.ToString(),
         "Artist[]" => Artists,
         "Comment:IComment[]" => Comments,
         "Genre:IGenre" => Genre,
+        "CRC:u32" => CRC,
         _ => null,
     };
 }

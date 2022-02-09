@@ -60,6 +60,7 @@ public class Tag : ITag
         }
     }
     public IGenre Genre { get; set; } = new Genre();
+    public uint CRC { get; set; } = 0;
 
     public static bool TryFromFile(string file, out Tag tag)
     {
@@ -129,6 +130,13 @@ public class Tag : ITag
                     return true;
                 }
                 return false;
+            case uint i:
+                if (tagId == "CRC")
+                {
+                    CRC = i;
+                    return true;
+                }
+                return false;
             default:
                 if (!canToString)
                     return false;
@@ -162,6 +170,13 @@ public class Tag : ITag
             case "Track":
                 TrackStr = str;
                 return false;
+            case "CRC":
+                if (uint.TryParse(str, out uint crc))
+                {
+                    CRC = crc;
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }
@@ -176,10 +191,12 @@ public class Tag : ITag
         "Comment" => Comment,
         "Genre" => Genre.Name,
         "Track" => TrackStr,
+        "CRC" => CRC.ToString(),
         "Artist[]" => Artists,
         "Comment:IComment[]" => Comments.ToArray(),
         "Track:u8" => Track,
         "Genre:IGenre" => Genre,
+        "CRC:u32" => CRC,
         _ => null,
     };
 }
