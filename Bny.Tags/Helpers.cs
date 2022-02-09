@@ -15,7 +15,12 @@ internal static class Helpers
         return Encoding.Unicode.GetString(span);
     }
 
-    public static string ToUTF_16BOM(this ReadOnlySpan<byte> span) => span[2..].ToUTF_16(span[0] == 0xFE && span[1] == 0xFF);
+    public static string ToUTF_16BOM(this ReadOnlySpan<byte> span)
+    {
+        if (span.Length == 0 || span[0] == 0)
+            return "";
+        return span[2..].ToUTF_16(span[0] == 0xFE && span[1] == 0xFF);
+    }
 
     // Always converts in big-endian byte order
     public static ushort ToUInt16(this ReadOnlySpan<byte> span) => span.Length < 2 ? throw new ArgumentException("Given span is too short") : (ushort)(span[0] << 8 | span[1]);

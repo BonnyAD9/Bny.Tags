@@ -44,4 +44,5 @@ public enum ID3v2Error
     FileNotFound = 4,
     NotID3 = 5,
     InvalidSize = 6,
+    Unsync = 7,
 }
