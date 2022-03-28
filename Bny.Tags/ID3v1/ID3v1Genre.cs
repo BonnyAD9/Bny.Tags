@@ -1,5 +1,8 @@
 ﻿namespace Bny.Tags.ID3v1;
 
+/// <summary>
+/// Enumeration containing all officially supported genres in ID3v1 and genres that added winamp
+/// </summary>
 public enum ID3v1Genre : byte
 {
     Unset = 255,
@@ -203,10 +206,25 @@ public enum ID3v1Genre : byte
     Cover = 254,
 }
 
+/// <summary>
+/// Helpful extensions for ID3v1Genre
+/// </summary>
 public static class ID3v1GenreExtensions
 {
+    /// <summary>
+    /// Checks whether the genre has valid value
+    /// </summary>
+    /// <param name="genre">Genre to check</param>
+    /// <returns>True if the genre has valid value, false if not</returns>
     public static bool IsValid(this ID3v1Genre genre) => (byte)genre < 192;
 
+    /// <summary>
+    /// Converts the given genre to proper string
+    /// 
+    /// This will have better results for displaying the value than the default ToString method
+    /// </summary>
+    /// <param name="genre">Genre to convert</param>
+    /// <returns>String representing the genre</returns>
     public static string AsString(this ID3v1Genre genre) => genre switch
     {
         ID3v1Genre.Blues => "Blues",
@@ -410,6 +428,11 @@ public static class ID3v1GenreExtensions
         _ => "Unknown",
     };
 
+    /// <summary>
+    /// Converts string created by AsString extension back to ID3v1Genre value
+    /// </summary>
+    /// <param name="str">String to convert</param>
+    /// <returns>Valid enumeration value if the given string could be converted, Unset if not</returns>
     public static ID3v1Genre Parse(string str) => str.ToLower().Replace(" ", "") switch
     {
         "blues" => ID3v1Genre.Blues,
