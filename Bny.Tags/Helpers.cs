@@ -24,6 +24,9 @@ internal static class Helpers
 
     // Always converts in big-endian byte order
     public static ushort ToUInt16(this ReadOnlySpan<byte> span) => span.Length < 2 ? throw new ArgumentException("Given span is too short") : (ushort)(span[0] << 8 | span[1]);
+    public static short ToInt16(this ReadOnlySpan<byte> span) => span.Length < 2 ? throw new ArgumentException("Given span is too short") : (short)(span[0] << 8 | span[1]);
     public static uint ToUInt32(this ReadOnlySpan<byte> span) =>
         span.Length < 4 ? throw new ArgumentException("Given span is too short") : (uint)(span[0] << 24 | span[1] << 16 | span[2] << 8 | span[3]);
+    public static uint ToUInt24(this ReadOnlySpan<byte> span) =>
+        span.Length < 3 ? throw new ArgumentException("Given span is too short") : (uint)(span[0] << 16 | span[1] << 8 | span[2]);
 }

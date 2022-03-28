@@ -1,17 +1,10 @@
-﻿using Bny.Tags;
+﻿using Bny.Tags.ID3v2.ID3v2_3;
+using Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-const string file = "The Beatles - Please Please Me - 10 Baby It's You.mp3";
+const string file = @"The Beatles - Please Please Me - 10 Baby It's You.mp3";
 
-if (!Tag.TryFromFile(file, out Tag t))
-{
-    Console.WriteLine($"Failed to read from file ${file}");
-    return;
-}
+ID3v2_3Tag tag = new();
+Console.WriteLine($"Error: {tag.Read(file)}");
 
-Console.WriteLine($"Title: {t.Title}");
-Console.WriteLine($"Artist: {t.Artist}");
-Console.WriteLine($"Album: {t.Album}");
-Console.WriteLine($"Year: {t.Year}");
-Console.WriteLine($"Comment: {t.Comment}");
-Console.WriteLine($"Track: {t.Track}");
-Console.WriteLine($"Genre: {t.Genre}");
+Console.WriteLine($"Title: {tag.GetFrame<TextFrame>(FrameID.TIT2)!.Information}");
+Console.WriteLine($"Author: {tag.GetFrame<TextFrame>(FrameID.TPE1)!.Information}");
