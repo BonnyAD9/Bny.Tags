@@ -1,9 +1,19 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3;
 
+/// <summary>
+/// Known ID3v2.3 frames
+/// </summary>
 [Flags]
 public enum FrameID : uint
 {
+    /// <summary>
+    /// This is not a valid tag
+    /// This may indicate that the tag data ended and there is only padding
+    /// </summary>
     None = 0,
+    /// <summary>
+    /// This is general invalid tag
+    /// </summary>
     Invalid = 0x_58_58_58_58,
     /// <summary>
     /// Experimental X (Flag)

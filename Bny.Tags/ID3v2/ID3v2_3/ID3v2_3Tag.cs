@@ -2,14 +2,37 @@
 
 namespace Bny.Tags.ID3v2.ID3v2_3;
 
+/// <summary>
+/// Manages ID3v2.3 tag
+/// </summary>
 public class ID3v2_3Tag
 {
+    /// <summary>
+    /// Value that indicates start of the tag
+    /// </summary>
     public const string id = "ID3";
+    /// <summary>
+    /// Header containing essential information about the tag
+    /// </summary>
     private Header Header { get; set; }
-    private ExtendedHeader ExtendedHeader_3 { get; set; }
+    /// <summary>
+    /// Header containint non essential information about the tag
+    /// </summary>
+    private ExtendedHeader ExtendedHeader { get; set; }
+    /// <summary>
+    /// Frames readed from the tag
+    /// </summary>
     private List<IFrame> Frames { get; set; } = new();
+    /// <summary>
+    /// Gets enumerable collection of Frames
+    /// </summary>
     public IEnumerable<IFrame> FramesEnum => Frames;
 
+    /// <summary>
+    /// Reads ID3v2.3 tag from file
+    /// </summary>
+    /// <param name="file">Path to the file</param>
+    /// <returns>Error code (FileNotFound, UnexpectedEnd, NoTag, WrongVersion, Unsupported, InvalidSize); TagError.None on success</returns>
     public TagError Read(string file)
     {
         if (!File.Exists(file))
@@ -19,6 +42,11 @@ public class ID3v2_3Tag
         return ReadStream(fs);
     }
 
+    /// <summary>
+    /// Reads ID3v2.3 tag from stream
+    /// </summary>
+    /// <param name="stream">Stream to read from</param>
+    /// <returns>Error Code (CannotRead, UnexpectedEnd, NoTag, WrongVersion, Unsupported, InvalidSize); TagError.None on success</returns>
     public TagError Read(Stream stream)
     {
         if (!stream.CanRead)
@@ -27,6 +55,11 @@ public class ID3v2_3Tag
         return ReadStream(stream);
     }
 
+    /// <summary>
+    /// Reads ID3v2.3 tag from binary data
+    /// </summary>
+    /// <param name="data">Binary data to read from</param>
+    /// <returns>Error Code (InvalidSize, NoTag, WrongVersion, Unsupported); TagError.None on success</returns>
     public TagError Read(ReadOnlySpan<byte> data)
     {
         if (data.Length < Header.size)
@@ -49,6 +82,11 @@ public class ID3v2_3Tag
         return ReadBytes(data[Header.Size..]);
     }
 
+    /// <summary>
+    /// Reads ID3v2.3 tag from stream
+    /// </summary>
+    /// <param name="stream">Stream to read from</param>
+    /// <returns>Error Code (UnexpectedEnd, NoTag, WrongVersion, Unsupported, InvalidSize); TagError.None on success</returns>
     private TagError ReadStream(Stream stream)
     {
         byte[] headerBuffer = new byte[Header.size];
@@ -82,19 +120,24 @@ public class ID3v2_3Tag
         return ReadBytes(data[..bufferLen]);
     }
 
+    /// <summary>
+    /// Reads ID3v2.3 tag (not including header) from binary data
+    /// </summary>
+    /// <param name="data">Binary data to read from</param>
+    /// <returns>Error code (InvalidSize); TagError.None on success</returns>
     private TagError ReadBytes(ReadOnlySpan<byte> data)
     {
         int pos = 0;
 
         if (Header.Flags.HasFlag(HeaderFlags.ExtendedHeader_3))
         {
-            ExtendedHeader_3 = new(data);
-            pos += (int)ExtendedHeader_3.Size;
+            ExtendedHeader = new(data);
+            pos += (int)ExtendedHeader.Size;
         }
 
         while (pos + FrameHeader.size < data.Length)
         {
-            FrameHeader frameHeader = FrameHeader.FromBytes(data[pos..], out int headerSize);
+            FrameHeader frameHeader = new(data[pos..], out int headerSize);
             pos += headerSize;
 
             if (frameHeader.IsEmpty)
@@ -117,6 +160,12 @@ public class ID3v2_3Tag
         return TagError.None;
     }
 
+    /// <summary>
+    /// Reads one frame (not including header) from binary data
+    /// </summary>
+    /// <param name="data">Data to read from</param>
+    /// <param name="header">Frame header</param>
+    /// <returns>Error code (Unsupported); TagError.None on success</returns>
     private TagError ReadFrame(ReadOnlySpan<byte> data, FrameHeader header)
     {
         if (header.IsCompressed || header.IsEncrypted)
@@ -231,6 +280,12 @@ public class ID3v2_3Tag
         return TagError.Unsupported;
     }
 
+    /// <summary>
+    /// Gets the requested frame and casts it into the given frame type 
+    /// </summary>
+    /// <typeparam name="T">Frame type to cast it to</typeparam>
+    /// <param name="id">ID of the requested frame</param>
+    /// <returns>The requested frame casted into its type, null if anything fails</returns>
     public T? GetFrame<T>(FrameID id) where T : IFrame
     {
         var frame = Frames.FirstOrDefault(p => p.ID == id);
@@ -239,11 +294,21 @@ public class ID3v2_3Tag
         return default;
     }
 
+    /// <summary>
+    /// Gets the requested frame
+    /// </summary>
+    /// <param name="id">ID of the frame to get</param>
+    /// <returns>The frame; null if the frame is not present</returns>
     public IFrame? GetFrame(FrameID id)
     {
         return Frames.FirstOrDefault(p => p.ID == id);
     }
 
+    /// <summary>
+    /// Deunsynchronizes given binary data
+    /// </summary>
+    /// <param name="buffer">Data to deunsynchronize</param>
+    /// <param name="len">Length of the deunsynchronized data</param>
     public static void Deunsynchronize(byte[] buffer, out int len)
     {
         len = 0;

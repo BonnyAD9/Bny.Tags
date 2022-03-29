@@ -19,7 +19,7 @@ internal struct Header
     /// </summary>
     public HeaderFlags Flags { get; set; }
     /// <summary>
-    /// Size of the whole tag
+    /// Size of the whole tag in bytes (without the header; after unsynchronization)
     /// </summary>
     public int Size { get; set; }
 
@@ -42,7 +42,7 @@ internal struct Header
         Version = (Version)data[3..5].ToUInt16();
         Flags = (HeaderFlags)data[5];
 
-        // Size uses only last 7 bits in every byte
+        // ID3v2 uses only last 7 bits in every byte of Size
         Size = data[6];
         Size = (Size << 7) | data[7];
         Size = (Size << 7) | data[8];
