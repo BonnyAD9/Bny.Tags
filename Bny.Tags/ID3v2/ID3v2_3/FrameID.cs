@@ -1,6 +1,19 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3;
 
 /// <summary>
+/// Includes methods for enum FrameID
+/// </summary>
+public static class FrameIDExtensions
+{
+    /// <summary>
+    /// Creates string representing the value
+    /// </summary>
+    /// <param name="id">Id to create the string from</param>
+    /// <returns>String representing the value in 4 characters</returns>
+    public static string String(this FrameID id) => Helpers.ToAscii(((uint)id).ToBytes().AsSpan());
+}
+
+/// <summary>
 /// Known ID3v2.3 frames
 /// </summary>
 [Flags]

@@ -1,11 +1,7 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class CommercialFrame : IFrame
+public class CommercialFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string Price { get; set; }
     public string ValidUntil { get; set; }
     public string ContactURL { get; set; }
@@ -15,9 +11,8 @@ public class CommercialFrame : IFrame
     public string PictureMIME { get; set; }
     public byte[] SellerLogo { get; set; }
 
-    public CommercialFrame()
+    public CommercialFrame() : base()
     {
-        Header = default;
         Price = "cur0";
         ValidUntil = "00000000";
         ContactURL = "";
@@ -28,9 +23,8 @@ public class CommercialFrame : IFrame
         SellerLogo = Array.Empty<byte>();
     }
 
-    internal CommercialFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal CommercialFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         var enc = (Encoding)data[0];
         int pos = 1;
         Price = data[1..].ToID3v2_3String(Encoding.ISO_8859_1, ref pos);
@@ -45,21 +39,16 @@ public class CommercialFrame : IFrame
         SellerLogo = data[pos..].ToArray();
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {Description}",
-            "A" => $"{ID}: (Commercial)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {Description}",
+            "A" => $"{ID.String()}: (Commercial)\n" +
                    $"  Price: {Price}\n" +
                    $"  Valid Until: {ValidUntil}\n" +
                    $"  Contact URL: {ContactURL}\n" +

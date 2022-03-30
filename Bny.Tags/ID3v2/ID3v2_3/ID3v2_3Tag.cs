@@ -22,11 +22,11 @@ public class ID3v2_3Tag
     /// <summary>
     /// Frames readed from the tag
     /// </summary>
-    private List<IFrame> Frames { get; set; } = new();
+    private List<Frame> Frames { get; set; } = new();
     /// <summary>
     /// Gets enumerable collection of Frames
     /// </summary>
-    public IEnumerable<IFrame> FramesEnum => Frames;
+    public IEnumerable<Frame> FramesEnum => Frames;
 
     /// <summary>
     /// Reads ID3v2.3 tag from file
@@ -286,7 +286,7 @@ public class ID3v2_3Tag
     /// <typeparam name="T">Frame type to cast it to</typeparam>
     /// <param name="id">ID of the requested frame</param>
     /// <returns>The requested frame casted into its type, null if anything fails</returns>
-    public T? GetFrame<T>(FrameID id) where T : IFrame
+    public T? GetFrame<T>(FrameID id) where T : Frame
     {
         var frame = Frames.FirstOrDefault(p => p.ID == id);
         if (frame is T res)
@@ -299,7 +299,7 @@ public class ID3v2_3Tag
     /// </summary>
     /// <param name="id">ID of the frame to get</param>
     /// <returns>The frame; null if the frame is not present</returns>
-    public IFrame? GetFrame(FrameID id)
+    public Frame? GetFrame(FrameID id)
     {
         return Frames.FirstOrDefault(p => p.ID == id);
     }

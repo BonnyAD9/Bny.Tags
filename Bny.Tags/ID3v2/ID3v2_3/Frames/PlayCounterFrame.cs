@@ -2,41 +2,30 @@
 
 namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class PlayCounterFrame : IFrame
+public class PlayCounterFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public BigInteger Counter { get; set; }
 
-    public PlayCounterFrame()
+    public PlayCounterFrame() : base()
     {
-        Header = default;
         Counter = BigInteger.Zero;
     }
 
-    internal PlayCounterFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal PlayCounterFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         Counter = new(data, true, true);
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {Counter}",
-            "A" => $"{ID}: (Play Counter)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {Counter}",
+            "A" => $"{ID.String()}: (Play Counter)\n" +
                    $"  Counter: {Counter}",
             _ => throw new FormatException()
         };

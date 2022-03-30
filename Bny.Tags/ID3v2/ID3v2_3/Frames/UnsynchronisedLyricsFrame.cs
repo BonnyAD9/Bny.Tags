@@ -1,26 +1,20 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class UnsynchronisedLyricsFrame : IFrame
+public class UnsynchronisedLyricsFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string Language { get; set; }
     public string ContentDescriptor { get; set; }
     public string Lyrics { get; set; }
 
-    public UnsynchronisedLyricsFrame()
+    public UnsynchronisedLyricsFrame() : base()
     {
-        Header = default;
         Language = "lng";
         ContentDescriptor = "";
         Lyrics = "";
     }
 
-    internal UnsynchronisedLyricsFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal UnsynchronisedLyricsFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         var enc = (Encoding)data[0];
         Language = data[1..4].ToISO_8859_1();
         int pos = 4;
@@ -28,21 +22,16 @@ public class UnsynchronisedLyricsFrame : IFrame
         Lyrics = data[pos..].ToID3v2_3String(enc);
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {ContentDescriptor}",
-            "A" => $"{ID}: (Unsynchronized Lyrics)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {ContentDescriptor}",
+            "A" => $"{ID.String()}: (Unsynchronized Lyrics)\n" +
                    $"  Language: {Language}\n" +
                    $"  Content Descriptor: {ContentDescriptor}\n" +
                    $"  Lyrics: {Lyrics}",

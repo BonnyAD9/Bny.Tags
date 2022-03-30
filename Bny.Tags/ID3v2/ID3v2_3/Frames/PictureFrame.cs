@@ -1,28 +1,22 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class PictureFrame : IFrame
+public class PictureFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string MIMEType { get; set; }
     public PictureType PictureType { get; set; }
     public string Description { get; set; }
     public byte[] PictureData { get; set; }
 
-    public PictureFrame()
+    public PictureFrame() : base()
     {
-        Header = default;
         MIMEType = "image/";
         PictureType = PictureType.Other;
         Description = "";
         PictureData = Array.Empty<byte>();
     }
 
-    internal PictureFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal PictureFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         var enc = (Encoding)data[0];
         int pos = 1;
         MIMEType = data[1..].ToID3v2_3String(Encoding.ISO_8859_1, ref pos);
@@ -32,21 +26,16 @@ public class PictureFrame : IFrame
         PictureData = data[pos..].ToArray();
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {Description}",
-            "A" => $"{ID}: (Picture)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {Description}",
+            "A" => $"{ID.String()}: (Picture)\n" +
                    $"  MIME Type: {MIMEType}\n" +
                    $"  Picture Type: {PictureType}\n" +
                    $"  Description: {Description}\n" +

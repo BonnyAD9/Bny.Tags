@@ -1,22 +1,16 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class InvolvedPeopleFrame : IFrame
+public class InvolvedPeopleFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public List<InvolvedPerson> People { get; set; }
 
-    public InvolvedPeopleFrame()
+    public InvolvedPeopleFrame() : base()
     {
-        Header = default;
         People = new();
     }
 
-    internal InvolvedPeopleFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal InvolvedPeopleFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         People = new();
         var enc = (Encoding)data[0];
         int p;
@@ -26,21 +20,16 @@ public class InvolvedPeopleFrame : IFrame
         }
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {People.Count} People",
-            "A" => $"{ID}: (Involved People)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {People.Count} People",
+            "A" => $"{ID.String()}: (Involved People)\n" +
                    $"  People: {string.Join(", ", People.Select(p => p.ToString()))}",
             _ => throw new FormatException()
         };

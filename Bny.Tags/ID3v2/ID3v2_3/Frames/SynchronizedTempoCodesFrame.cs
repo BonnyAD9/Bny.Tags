@@ -1,24 +1,18 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class SynchronizedTempoCodesFrame : IFrame
+public class SynchronizedTempoCodesFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public TimeStampFormat Format { get; set; }
     public List<TempoCode> TempoData { get; set; }
 
-    public SynchronizedTempoCodesFrame()
+    public SynchronizedTempoCodesFrame() : base()
     {
-        Header = default;
         Format = TimeStampFormat.MPEGFrames;
         TempoData = new();
     }
 
-    internal SynchronizedTempoCodesFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal SynchronizedTempoCodesFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         TempoData = new();
         Format = (TimeStampFormat)data[0];
         int step;
@@ -26,21 +20,16 @@ public class SynchronizedTempoCodesFrame : IFrame
             TempoData.Add(new(data, out step));
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {TempoData.Count} codes",
-            "A" => $"{ID}: (Synchronized Tempo Codes)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {TempoData.Count} codes",
+            "A" => $"{ID.String()}: (Synchronized Tempo Codes)\n" +
                    $"  Format: {Format}\n" +
                    $"  Tempo Data: {string.Join(", ", TempoData.Select(p => p.ToString()))}",
             _ => throw new FormatException()

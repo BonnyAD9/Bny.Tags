@@ -1,44 +1,33 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-internal class UserDefinedURLFrame : IFrame
+public class UserDefinedURLFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string Description { get; set; }
     public string URL { get; set; }
 
-    public UserDefinedURLFrame()
+    public UserDefinedURLFrame() : base()
     {
-        Header = default;
         Description = "";
         URL = "";
     }
 
-    public UserDefinedURLFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal UserDefinedURLFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         int pos = 0;
         Description = data.ToID3v2_3String(ref pos);
         URL = data[pos..].ToISO_8859_1();
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {Description}",
-            "A" => $"{ID}: (User Defined URL)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {Description}",
+            "A" => $"{ID.String()}: (User Defined URL)\n" +
                    $"  Description: {Description}\n" +
                    $"  URL: {URL}",
             _ => throw new FormatException()

@@ -1,26 +1,20 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class CommentFrame : IFrame
+public class CommentFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string Language { get; set; }
     public string ContentDescription { get; set; }
     public string Text { get; set; }
 
-    public CommentFrame()
+    public CommentFrame() : base()
     {
-        Header = default;
         Language = "lng";
         ContentDescription = "";
         Text = "";
     }
 
-    internal CommentFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal CommentFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         var enc = (Encoding)data[0];
         Language = data[1..4].ToISO_8859_1();
         int pos = 4;
@@ -28,21 +22,16 @@ public class CommentFrame : IFrame
         Text = data[pos..].ToID3v2_3String(enc);
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {ContentDescription}",
-            "A" => $"{ID} (Comment):\n" + 
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {ContentDescription}",
+            "A" => $"{ID.String()} (Comment):\n" + 
                    $"  Language: {Language}\n" +
                    $"  Description: {ContentDescription}\n" +
                    $"  Text: {Text}",

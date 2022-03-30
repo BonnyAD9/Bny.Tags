@@ -1,20 +1,15 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class SynchronizedLyricsFrame : IFrame
+public class SynchronizedLyricsFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string Language { get; set; }
     public TimeStampFormat TimeStampFormat { get; set; }
     public ContentType ContentType { get; set; }
     public string ContentDescriptor { get; set; }
     public List<TextSync> TextSyncs { get; set; }
 
-    public SynchronizedLyricsFrame()
+    public SynchronizedLyricsFrame() : base()
     {
-        Header = default;
         Language = "lng";
         TimeStampFormat = TimeStampFormat.MPEGFrames;
         ContentType = ContentType.Other;
@@ -22,9 +17,8 @@ public class SynchronizedLyricsFrame : IFrame
         TextSyncs = new();
     }
 
-    internal SynchronizedLyricsFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal SynchronizedLyricsFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         var enc = (Encoding)data[0];
         Language = data[1..4].ToISO_8859_1();
         TimeStampFormat = (TimeStampFormat)data[4];
@@ -36,21 +30,16 @@ public class SynchronizedLyricsFrame : IFrame
             TextSyncs.Add(new TextSync(data[pos..], enc, out p));
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {ContentDescriptor}",
-            "A" => $"{ID}: (Synchronized Lyrics)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {ContentDescriptor}",
+            "A" => $"{ID.String()}: (Synchronized Lyrics)\n" +
                    $"  Language: {Language}\n" +
                    $"  Time Stamp Format: {TimeStampFormat}\n" +
                    $"  Content Type: {ContentType}\n" +

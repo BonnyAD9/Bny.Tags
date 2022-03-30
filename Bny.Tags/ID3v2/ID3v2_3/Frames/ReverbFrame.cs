@@ -1,11 +1,7 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class ReverbFrame : IFrame
+public class ReverbFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public uint ReverbLeft { get; set; }
     public uint ReverbRight { get; set; }
     public byte ReverbBouncesLeft { get; set; }
@@ -17,9 +13,8 @@ public class ReverbFrame : IFrame
     public byte PremixLeftRight { get; set; }
     public byte PremixRightLeft { get; set; }
 
-    public ReverbFrame()
+    public ReverbFrame() : base()
     {
-        Header = default;
         ReverbLeft = 0;
         ReverbRight = 0;
         ReverbBouncesLeft = 0;
@@ -32,9 +27,8 @@ public class ReverbFrame : IFrame
         PremixRightLeft = 0;
     }
 
-    internal ReverbFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal ReverbFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         ReverbLeft = data[..2].ToUInt16();
         ReverbRight = data[2..4].ToUInt16();
         ReverbBouncesLeft = data[4];
@@ -47,21 +41,16 @@ public class ReverbFrame : IFrame
         PremixRightLeft = data[11];
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {ReverbLeft} : {ReverbRight}",
-            "A" => $"{ID}: (Reverb)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {ReverbLeft} : {ReverbRight}",
+            "A" => $"{ID.String()}: (Reverb)\n" +
                    $"  Reverb Left: {ReverbLeft}\n" +
                    $"  Reverb Right: {ReverbRight}\n" +
                    $"  Reverb Bounces Left: {ReverbBouncesLeft}\n" +

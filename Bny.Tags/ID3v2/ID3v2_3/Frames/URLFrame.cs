@@ -1,40 +1,29 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class URLFrame : IFrame
+public class URLFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public string URL { get; set; }
 
-    public URLFrame()
+    public URLFrame() : base()
     {
-        Header = default;
         URL = "";
     }
 
-    internal URLFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal URLFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         URL = data.ToISO_8859_1();
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {URL}",
-            "A" => $"{ID}: (URL)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {URL}",
+            "A" => $"{ID.String()}: (URL)\n" +
                    $"  URL: {URL}",
             _ => throw new FormatException()
         };

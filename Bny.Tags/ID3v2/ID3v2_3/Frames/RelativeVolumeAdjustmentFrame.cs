@@ -2,12 +2,8 @@
 
 namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
-public class RelativeVolumeAdjustmentFrame : IFrame
+public class RelativeVolumeAdjustmentFrame : Frame
 {
-    internal FrameHeader Header { get; set; }
-    public FrameID ID => Header.ID;
-    FrameHeader IFrame.Header => Header;
-
     public IncrementDecrement IncrementDecrement { get; set; }
     public byte BitsPerVolDesc { get; set; }
     public BigInteger RelativeRight { get; set; }
@@ -23,9 +19,8 @@ public class RelativeVolumeAdjustmentFrame : IFrame
     public BigInteger RelativeBass { get; set; }
     public BigInteger PeakBass { get; set; }
 
-    public RelativeVolumeAdjustmentFrame()
+    public RelativeVolumeAdjustmentFrame() : base()
     {
-        Header = default;
         IncrementDecrement = IncrementDecrement.None;
         BitsPerVolDesc = 16;
         RelativeRight = BigInteger.Zero;
@@ -42,9 +37,8 @@ public class RelativeVolumeAdjustmentFrame : IFrame
         PeakBass = BigInteger.Zero;
     }
 
-    internal RelativeVolumeAdjustmentFrame(FrameHeader header, ReadOnlySpan<byte> data)
+    internal RelativeVolumeAdjustmentFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
-        Header = header;
         IncrementDecrement = (IncrementDecrement)data[0];
         BitsPerVolDesc = data[1];
         int bpvd = BitsPerVolDesc > (255 - 7) ? 32 : (BitsPerVolDesc + 7) / 8;
@@ -87,21 +81,16 @@ public class RelativeVolumeAdjustmentFrame : IFrame
         PeakBass = new(data[pos..], true, true);
     }
 
-    public override string ToString()
-    {
-        return ToString("G");
-    }
-
-    public string ToString(string? fmt)
+    public override string ToString(string? fmt)
     {
         if (string.IsNullOrEmpty(fmt))
             fmt = "G";
 
         return fmt switch
         {
-            "G" => ID.ToString(),
-            "C" => $"{ID}: {IncrementDecrement}",
-            "A" => $"{ID}: (Relative Volume Adjustment)\n" +
+            "G" => ID.String(),
+            "C" => $"{ID.String()}: {IncrementDecrement}",
+            "A" => $"{ID.String()}: (Relative Volume Adjustment)\n" +
                    $"  Increment: {IncrementDecrement}\n" +
                    $"  Bits Per Volume Description: {BitsPerVolDesc}\n" +
                    $"  Relative Right: {RelativeRight}\n" +

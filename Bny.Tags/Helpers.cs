@@ -76,4 +76,11 @@ internal static class Helpers
     /// <exception cref="ArgumentException">Thrown when the given span is too short</exception>
     public static uint ToUInt32(this ReadOnlySpan<byte> span) =>
         span.Length < 4 ? throw new ArgumentException("Given span is too short") : (uint)(span[0] << 24 | span[1] << 16 | span[2] << 8 | span[3]);
+
+    /// <summary>
+    /// Converts the int into array of bytes in big-endian byte order
+    /// </summary>
+    /// <param name="value">value to convert</param>
+    /// <returns>new byte array of length 4</returns>
+    public static byte[] ToBytes(this uint value) => unchecked(new byte[] { (byte)(value >> 24), (byte)(value >> 16), (byte)(value >> 8), (byte)value });
 }
