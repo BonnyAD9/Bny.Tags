@@ -1,13 +1,34 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Synchronized lyrics/text (ID3v2.3)
+/// </summary>
 public class SynchronizedLyricsFrame : Frame
 {
+    /// <summary>
+    /// Language
+    /// </summary>
     public string Language { get; set; }
+    /// <summary>
+    /// Time stamp format
+    /// </summary>
     public TimeStampFormat TimeStampFormat { get; set; }
+    /// <summary>
+    /// Content type
+    /// </summary>
     public ContentType ContentType { get; set; }
+    /// <summary>
+    /// Constent descriptor
+    /// </summary>
     public string ContentDescriptor { get; set; }
+    /// <summary>
+    /// Synchronized text (text with time stamps)
+    /// </summary>
     public List<TextSync> TextSyncs { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public SynchronizedLyricsFrame() : base()
     {
         Language = "lng";
@@ -17,6 +38,11 @@ public class SynchronizedLyricsFrame : Frame
         TextSyncs = new();
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal SynchronizedLyricsFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         var enc = (Encoding)data[0];
@@ -50,13 +76,28 @@ public class SynchronizedLyricsFrame : Frame
     }
 }
 
+/// <summary>
+/// Describes the type of content
+/// </summary>
 public enum ContentType : byte
 {
     Other = 0x00,
     Lyrics = 0x01,
     TextTranscription = 0x02,
+    /// <summary>
+    /// Movement/part name (e.g. "Adagio")
+    /// </summary>
     PartName = 0x03,
+    /// <summary>
+    /// Events (e.g. "Don Quijote enteres the stage")
+    /// </summary>
     Events = 0x04,
+    /// <summary>
+    /// Chord (e.g. "Bb F Fsus")
+    /// </summary>
     Chord = 0x05,
+    /// <summary>
+    /// Trivia/'pop up' information
+    /// </summary>
     Trivia = 0x06,
 }

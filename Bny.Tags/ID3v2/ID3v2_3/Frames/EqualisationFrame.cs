@@ -1,16 +1,35 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Equalisation (ID3v2.3)
+/// Allows to predefine equalisation curve
+/// </summary>
 public class EqualisationFrame : Frame
 {
+    /// <summary>
+    /// Adjustment bits
+    /// 0x10 (16) is recommended
+    /// </summary>
     public byte AdjustmentBits { get; set; }
+    /// <summary>
+    /// Describes the equalisation curve
+    /// </summary>
     public List<EqualisationBand> Bands { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public EqualisationFrame() : base()
     {
         AdjustmentBits = 0x10;
         Bands = new();
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal EqualisationFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         AdjustmentBits = data[0];

@@ -1,11 +1,26 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Ownership frame
+/// </summary>
 public class OwnershipFrame : Frame
 {
+    /// <summary>
+    /// Price payed preceaded with currency code according to ISO-4217
+    /// </summary>
     public string PricePayed { get; set; }
+    /// <summary>
+    /// Date of purchase in format "YYYYMMDD"
+    /// </summary>
     public string DateOfPurchase { get; set; }
+    /// <summary>
+    /// Seller
+    /// </summary>
     public string Seller { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public OwnershipFrame() : base()
     {
         PricePayed = "cur0";
@@ -13,6 +28,11 @@ public class OwnershipFrame : Frame
         Seller = "";
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal OwnershipFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         var enc = (Encoding)data[0];

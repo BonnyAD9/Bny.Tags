@@ -1,12 +1,31 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Audio encryption (ID3v2.3)
+/// Indicates whether the audio stream is encrypted
+/// </summary>
 public class EncryptionFrame : Frame
 {
+    /// <summary>
+    /// Email adress/link to email adress to organization responsible for this encryption
+    /// </summary>
     public string OwnerID { get; set; }
+    /// <summary>
+    /// Start of preview in MPEG frames
+    /// </summary>
     public ushort PreviewStart { get; set; }
+    /// <summary>
+    /// Length of preview in MPEG frames
+    /// </summary>
     public ushort PreviewLength { get; set; }
+    /// <summary>
+    /// Additional info about encryption (binary data)
+    /// </summary>
     public byte[] EncryptionInfo { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public EncryptionFrame() : base()
     {
         OwnerID = "";
@@ -15,6 +34,11 @@ public class EncryptionFrame : Frame
         EncryptionInfo = Array.Empty<byte>();
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal EncryptionFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         int pos = 0;

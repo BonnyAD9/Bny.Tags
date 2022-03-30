@@ -1,18 +1,57 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Reverb (ID3v2.3)
+/// Allows to adjust echos of different kinds
+/// </summary>
 public class ReverbFrame : Frame
 {
+    /// <summary>
+    /// Delay between left bounces in milliseconds
+    /// </summary>
     public uint ReverbLeft { get; set; }
+    /// <summary>
+    /// Delay between right bounces in milliseconds
+    /// </summary>
     public uint ReverbRight { get; set; }
+    /// <summary>
+    /// Number of left bounces to do
+    /// 0xFF (255) means infinitely many
+    /// </summary>
     public byte ReverbBouncesLeft { get; set; }
+    /// <summary>
+    /// Number of roght bounces to do
+    /// 0xFF (255) means infinitely many
+    /// </summary>
     public byte ReverbBouncesRight { get; set; }
+    /// <summary>
+    /// Reverb feedback, left to left
+    /// </summary>
     public byte ReverbFeedbackLeftLeft { get; set; }
+    /// <summary>
+    /// Reverb feedback, left to right
+    /// </summary>
     public byte ReverbFeedbackLeftRight { get; set; }
+    /// <summary>
+    /// Reverb feedback, right to right
+    /// </summary>
     public byte ReverbFeedbackRightRight { get; set; }
+    /// <summary>
+    /// Reverb feedback, right to left
+    /// </summary>
     public byte ReverbFeedbackRightLeft { get; set; }
+    /// <summary>
+    /// Premix left to right
+    /// </summary>
     public byte PremixLeftRight { get; set; }
+    /// <summary>
+    /// Premix right to left
+    /// </summary>
     public byte PremixRightLeft { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public ReverbFrame() : base()
     {
         ReverbLeft = 0;
@@ -27,6 +66,11 @@ public class ReverbFrame : Frame
         PremixRightLeft = 0;
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal ReverbFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         ReverbLeft = data[..2].ToUInt16();

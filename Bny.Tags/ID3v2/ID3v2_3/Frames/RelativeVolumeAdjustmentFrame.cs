@@ -2,23 +2,73 @@
 
 namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Relative volume adjustmet (ID3v2.3)
+/// Allows to adjust how much to increase/decrease the volume on each channel
+/// </summary>
 public class RelativeVolumeAdjustmentFrame : Frame
 {
+    /// <summary>
+    /// Increment/decrement
+    /// </summary>
     public IncrementDecrement IncrementDecrement { get; set; }
+    /// <summary>
+    /// Bits used for volume description
+    /// 0x10 (16) is recommended
+    /// </summary>
     public byte BitsPerVolDesc { get; set; }
+    /// <summary>
+    /// Relative volume change, right
+    /// </summary>
     public BigInteger RelativeRight { get; set; }
+    /// <summary>
+    /// Relative volume change, left
+    /// </summary>
     public BigInteger RelativeLeft { get; set; }
+    /// <summary>
+    /// Peak folume right
+    /// </summary>
     public BigInteger PeakRight { get; set; }
+    /// <summary>
+    /// Peak volume left
+    /// </summary>
     public BigInteger PeakLeft { get; set; }
+    /// <summary>
+    /// Relative volume change, right back
+    /// </summary>
     public BigInteger RelativeRightBack { get; set; }
+    /// <summary>
+    /// Relative volume change, left back
+    /// </summary>
     public BigInteger RelativeLeftBack { get; set; }
+    /// <summary>
+    /// Peak volume right back
+    /// </summary>
     public BigInteger PeakRightBack { get; set; }
+    /// <summary>
+    /// Peak volume left back
+    /// </summary>
     public BigInteger PeakLeftBack { get; set; }
+    /// <summary>
+    /// Relative volume change, center
+    /// </summary>
     public BigInteger RelativeCenter { get; set; }
+    /// <summary>
+    /// Peak volume center
+    /// </summary>
     public BigInteger PeakCenter { get; set; }
+    /// <summary>
+    /// Relative volume change, bass
+    /// </summary>
     public BigInteger RelativeBass { get; set; }
+    /// <summary>
+    /// Peak volume bass
+    /// </summary>
     public BigInteger PeakBass { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public RelativeVolumeAdjustmentFrame() : base()
     {
         IncrementDecrement = IncrementDecrement.None;
@@ -37,6 +87,11 @@ public class RelativeVolumeAdjustmentFrame : Frame
         PeakBass = BigInteger.Zero;
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal RelativeVolumeAdjustmentFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         IncrementDecrement = (IncrementDecrement)data[0];
@@ -110,6 +165,9 @@ public class RelativeVolumeAdjustmentFrame : Frame
     }
 }
 
+/// <summary>
+/// Indicates whether the relative volume change is decrease or increase at the given channel (ID3v2.3)
+/// </summary>
 [Flags]
 public enum IncrementDecrement : byte
 {

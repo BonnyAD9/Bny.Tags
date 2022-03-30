@@ -1,26 +1,50 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// General encapsulated object (ID3v2.3)
+/// Allows to encapsulate any type of file
+/// </summary>
 public class GeneralObjectFrame : Frame
 {
+    /// <summary>
+    /// MIME type
+    /// </summary>
     public string MIMEType { get; set; }
-    public string FileName { get; set; }
+    /// <summary>
+    /// Filename
+    /// </summary>
+    public string Filename { get; set; }
+    /// <summary>
+    /// Content description
+    /// </summary>
     public string ContentDescription { get; set; }
+    /// <summary>
+    /// Encapsulated object, binary data
+    /// </summary>
     public byte[] Data { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public GeneralObjectFrame() : base()
     {
         MIMEType = "";
-        FileName = "";
+        Filename = "";
         ContentDescription = "";
         Data = Array.Empty<byte>();
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal GeneralObjectFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         var enc = (Encoding)data[0];
         int pos = 1;
         MIMEType = data[1..].ToID3v2_3String(Encoding.ISO_8859_1, ref pos);
-        FileName = data[pos..].ToID3v2_3String(enc, ref pos);
+        Filename = data[pos..].ToID3v2_3String(enc, ref pos);
         ContentDescription = data[pos..].ToID3v2_3String(enc, ref pos);
         Data = data[pos..].ToArray();
     }
@@ -36,7 +60,7 @@ public class GeneralObjectFrame : Frame
             "C" => $"{ID.String()}: {ContentDescription}",
             "A" => $"{ID.String()}: (General Object)\n" +
                    $"  MIME Type: {MIMEType}\n" +
-                   $"  File Name: {FileName}\n" +
+                   $"  File Name: {Filename}\n" +
                    $"  Content Description: {ContentDescription}\n" +
                    $"  Data: {Data.Length} B",
             _ => throw new FormatException()

@@ -1,13 +1,35 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// MPEG location lookup table (ID3v2.3)
+/// Allows increase of performance and accuracy of jumps within a MPEG file
+/// </summary>
 public class MPEGLocationLookupTableFrame : Frame
 {
+    /// <summary>
+    /// MPEG frames between reference
+    /// </summary>
     public ushort MPEGFramesBetweenReference { get; set; }
+    /// <summary>
+    /// Bytes between reference
+    /// </summary>
     public uint BytesBetweenReference { get; set; }
+    /// <summary>
+    /// Milliseconds between reference
+    /// </summary>
     public uint MillisecondsBetweenreference { get; set; }
+    /// <summary>
+    /// Bits for bytes deviation
+    /// </summary>
     public byte BitsForBytesDeviation { get; set; }
+    /// <summary>
+    /// Bits for milliseconds deviation
+    /// </summary>
     public byte BitsForMillisecondsDeviation { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public MPEGLocationLookupTableFrame() : base()
     {
         MPEGFramesBetweenReference = 0;
@@ -17,6 +39,11 @@ public class MPEGLocationLookupTableFrame : Frame
         BitsForMillisecondsDeviation = 0;
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal MPEGLocationLookupTableFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         MPEGFramesBetweenReference = data.ToUInt16();

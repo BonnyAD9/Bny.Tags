@@ -1,11 +1,26 @@
 ﻿namespace Bny.Tags.ID3v2.ID3v2_3.Frames;
 
+/// <summary>
+/// Group identification registration
+/// </summary>
 public class GroupRegistrationFrame : Frame
 {
+    /// <summary>
+    /// Email adress/link to email adress to organization responsible for the grouping
+    /// </summary>
     public string OwnerID { get; set; }
+    /// <summary>
+    /// Group symbol
+    /// </summary>
     public byte GroupSymbol { get; set; }
+    /// <summary>
+    /// Group data
+    /// </summary>
     public byte[] Data { get; set; }
 
+    /// <summary>
+    /// Creates empty frame
+    /// </summary>
     public GroupRegistrationFrame() : base()
     {
         OwnerID = "";
@@ -13,6 +28,11 @@ public class GroupRegistrationFrame : Frame
         Data = Array.Empty<byte>();
     }
 
+    /// <summary>
+    /// Initializes the frame from binary data and header
+    /// </summary>
+    /// <param name="header">Header of the frame</param>
+    /// <param name="data">Binary data of the frame</param>
     internal GroupRegistrationFrame(FrameHeader header, ReadOnlySpan<byte> data) : base(header)
     {
         int pos = 0;
