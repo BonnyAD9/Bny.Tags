@@ -11,7 +11,7 @@ The interface for reading tags isn't very friendly yet (you need to choose from 
 This example shows reading ID3v2.3 tag from a mp3 file and printing all the information.
 
 ### Code
-```
+```C#
 using Bny.Tags.ID3v2.ID3v2_3;
 
 const string file = @"The Beatles - Please Please Me - 10 Baby It's You.mp3";
@@ -58,7 +58,7 @@ APIC: (Picture)
 This example shows reading ID3v2.3 tag from a mp3 file and printing only the Title and Author.
 
 ### Code
-```
+```C#
 using Bny.Tags.ID3v2.ID3v2_3;
 using Bny.Tags.ID3v2.ID3v2_3.Frames;
 
