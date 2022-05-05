@@ -26,6 +26,8 @@ public class SynchronizedLyricsFrame : Frame
     /// </summary>
     public List<TextSync> TextSyncs { get; set; }
 
+    public SynchronizedLyricsFrame? Next { get; private set; } = null;
+
     /// <summary>
     /// Creates empty frame
     /// </summary>
@@ -73,6 +75,32 @@ public class SynchronizedLyricsFrame : Frame
                    $"  Text Syncs: {string.Join(", ", TextSyncs.Select(p => p.ToString()))}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is SynchronizedLyricsFrame sylt)
+        {
+            Add(sylt);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(SynchronizedLyricsFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }
 

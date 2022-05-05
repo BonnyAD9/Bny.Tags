@@ -22,7 +22,7 @@ public class ID3v2_3Tag
     /// <summary>
     /// Frames readed from the tag
     /// </summary>
-    private List<Frame> Frames { get; set; } = new();
+    private FrameCollection Frames { get; set; } = new();
     /// <summary>
     /// Gets enumerable collection of Frames
     /// </summary>
@@ -286,23 +286,14 @@ public class ID3v2_3Tag
     /// <typeparam name="T">Frame type to cast it to</typeparam>
     /// <param name="id">ID of the requested frame</param>
     /// <returns>The requested frame casted into its type, null if anything fails</returns>
-    public T? GetFrame<T>(FrameID id) where T : Frame
-    {
-        var frame = Frames.FirstOrDefault(p => p.ID == id);
-        if (frame is T res)
-            return res;
-        return default;
-    }
+    public T? GetFrame<T>(FrameID id) where T : Frame => Frames.Get<T>(id);
 
     /// <summary>
     /// Gets the requested frame
     /// </summary>
     /// <param name="id">ID of the frame to get</param>
     /// <returns>The frame; null if the frame is not present</returns>
-    public Frame? GetFrame(FrameID id)
-    {
-        return Frames.FirstOrDefault(p => p.ID == id);
-    }
+    public Frame? GetFrame(FrameID id) => Frames[id];
 
     /// <summary>
     /// Deunsynchronizes given binary data

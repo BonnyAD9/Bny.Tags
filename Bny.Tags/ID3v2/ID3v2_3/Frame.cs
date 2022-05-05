@@ -70,4 +70,11 @@ public abstract class Frame
                 throw new FormatException();
         }
     }
+
+    /// <summary>
+    /// Tries to add another frame
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    /// <returns>true on success, otherwise false, only some frames support this</returns>
+    public virtual bool TryAdd(Frame frame) => false;
 }

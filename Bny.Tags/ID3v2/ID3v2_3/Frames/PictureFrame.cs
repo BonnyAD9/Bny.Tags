@@ -24,6 +24,11 @@ public class PictureFrame : Frame
     public byte[] PictureData { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise false
+    /// </summary>
+    public PictureFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public PictureFrame() : base()
@@ -66,6 +71,32 @@ public class PictureFrame : Frame
                    $"  Picture Data: {PictureData.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is PictureFrame apic)
+        {
+            Add(apic);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(PictureFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }
 

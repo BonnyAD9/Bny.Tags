@@ -19,6 +19,11 @@ public class GroupRegistrationFrame : Frame
     public byte[] Data { get; set; }
 
     /// <summary>
+    /// Next frame of the same type, otherwise null
+    /// </summary>
+    public GroupRegistrationFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public GroupRegistrationFrame() : base()
@@ -57,5 +62,31 @@ public class GroupRegistrationFrame : Frame
                    $"  Data: {Data.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is GroupRegistrationFrame grid)
+        {
+            Add(grid);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(GroupRegistrationFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

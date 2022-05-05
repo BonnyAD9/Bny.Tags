@@ -19,6 +19,11 @@ public class UnsynchronisedLyricsFrame : Frame
     public string Lyrics { get; set; }
 
     /// <summary>
+    /// Next frame of this type
+    /// </summary>
+    public UnsynchronisedLyricsFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public UnsynchronisedLyricsFrame() : base()
@@ -57,5 +62,31 @@ public class UnsynchronisedLyricsFrame : Frame
                    $"  Lyrics: {Lyrics}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is UnsynchronisedLyricsFrame uslt)
+        {
+            Add(uslt);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(UnsynchronisedLyricsFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

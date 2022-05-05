@@ -24,6 +24,11 @@ public class EncryptionFrame : Frame
     public byte[] EncryptionInfo { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public EncryptionFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public EncryptionFrame() : base()
@@ -66,5 +71,31 @@ public class EncryptionFrame : Frame
                    $"  Encryption Info: {EncryptionInfo.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is EncryptionFrame aenc)
+        {
+            Add(aenc);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(EncryptionFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

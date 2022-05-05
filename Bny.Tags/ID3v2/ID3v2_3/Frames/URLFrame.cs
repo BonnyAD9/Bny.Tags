@@ -11,6 +11,11 @@ public class URLFrame : Frame
     public string URL { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public URLFrame? Next { get; private set; }
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public URLFrame() : base()
@@ -41,5 +46,51 @@ public class URLFrame : Frame
                    $"  URL: {URL}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is URLFrame w)
+        {
+            Add(w);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public bool Add(URLFrame frame)
+    {
+        if (frame.ID != ID || ID is not FrameID.WCOM or FrameID.WOAR)
+            return false;
+
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return true;
+        }
+
+        frame.Next.AddNoCheck(frame);
+        return true;
+    }
+
+    /// <summary>
+    /// Adds frame without checking for the frame ID
+    /// </summary>
+    /// <param name="frame"></param>
+    private void AddNoCheck(URLFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.AddNoCheck(frame);
     }
 }

@@ -14,6 +14,11 @@ public class UserDefinedTextFrame : Frame
     /// </summary>
     public string Value { get; set; }
 
+    /// <summary>
+    /// Another frame of this type, otherwise null
+    /// </summary>
+    public UserDefinedTextFrame? Next { get; private set; } = null;
+
 
     /// <summary>
     /// Creates empty frame
@@ -52,5 +57,31 @@ public class UserDefinedTextFrame : Frame
                    $"  Value: {Value}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is UserDefinedTextFrame txxx)
+        {
+            Add(txxx);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(UserDefinedTextFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

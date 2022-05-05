@@ -15,6 +15,11 @@ public class PrivateFrame : Frame
     public byte[] Data { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public PrivateFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public PrivateFrame() : base()
@@ -49,5 +54,31 @@ public class PrivateFrame : Frame
                    $"  Data: {Data.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is PrivateFrame priv)
+        {
+            Add(priv);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(PrivateFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

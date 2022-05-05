@@ -24,6 +24,11 @@ public class LinkedInformationFrame : Frame
     public byte[] AdditionalData { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public LinkedInformationFrame? Next { get; private set; }
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public LinkedInformationFrame() : base()
@@ -65,5 +70,31 @@ public class LinkedInformationFrame : Frame
                    $"  Additional Data: {AdditionalData.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is LinkedInformationFrame link)
+        {
+            Add(link);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(LinkedInformationFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

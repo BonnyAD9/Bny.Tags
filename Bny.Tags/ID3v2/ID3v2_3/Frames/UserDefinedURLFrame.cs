@@ -14,6 +14,8 @@ public class UserDefinedURLFrame : Frame
     /// </summary>
     public string URL { get; set; }
 
+    public UserDefinedURLFrame? Next { get; private set; } = null;
+
     /// <summary>
     /// Creates empty frame
     /// </summary>
@@ -49,5 +51,31 @@ public class UserDefinedURLFrame : Frame
                    $"  URL: {URL}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is UserDefinedURLFrame wxxx)
+        {
+            Add(wxxx);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(UserDefinedURLFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

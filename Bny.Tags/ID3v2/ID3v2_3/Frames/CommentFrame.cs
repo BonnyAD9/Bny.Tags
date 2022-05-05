@@ -20,6 +20,11 @@ public class CommentFrame : Frame
     public string Text { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public CommentFrame? Next { get; private set; }
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public CommentFrame() : base()
@@ -58,5 +63,31 @@ public class CommentFrame : Frame
                    $"  Text: {Text}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is CommentFrame comm)
+        {
+            Add(comm);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(CommentFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

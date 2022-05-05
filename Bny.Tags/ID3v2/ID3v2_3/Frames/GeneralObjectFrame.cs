@@ -24,6 +24,11 @@ public class GeneralObjectFrame : Frame
     public byte[] Data { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public GeneralObjectFrame? Next { get; private set; }
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public GeneralObjectFrame() : base()
@@ -65,5 +70,31 @@ public class GeneralObjectFrame : Frame
                    $"  Data: {Data.Length} B",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is GeneralObjectFrame geob)
+        {
+            Add(geob);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(GeneralObjectFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

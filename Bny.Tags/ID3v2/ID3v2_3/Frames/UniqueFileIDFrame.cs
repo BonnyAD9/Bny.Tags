@@ -17,6 +17,11 @@ public class UniqueFileIDFrame : Frame
     public byte[] Identifier { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public UniqueFileIDFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public UniqueFileIDFrame() : base()
@@ -51,5 +56,31 @@ public class UniqueFileIDFrame : Frame
                    $"  Identifier: {BitConverter.ToString(Identifier)}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is UniqueFileIDFrame ufid)
+        {
+            Add(ufid);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(UniqueFileIDFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }

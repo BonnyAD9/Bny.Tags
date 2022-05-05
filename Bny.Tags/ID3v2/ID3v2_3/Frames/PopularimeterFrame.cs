@@ -25,6 +25,11 @@ public class PopularimeterFrame : Frame
     public BigInteger Counter { get; set; }
 
     /// <summary>
+    /// Next frame of this type, otherwise null
+    /// </summary>
+    public PopularimeterFrame? Next { get; private set; } = null;
+
+    /// <summary>
     /// Creates empty frame
     /// </summary>
     public PopularimeterFrame() : base()
@@ -62,5 +67,31 @@ public class PopularimeterFrame : Frame
                    $"  Counter: {Counter}",
             _ => throw new FormatException()
         };
+    }
+
+    public override bool TryAdd(Frame frame)
+    {
+        if (frame is PopularimeterFrame popm)
+        {
+            Add(popm);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Adds another frame of this type
+    /// </summary>
+    /// <param name="frame">frame to add</param>
+    public void Add(PopularimeterFrame frame)
+    {
+        if (frame.Next is null)
+        {
+            frame.Next = Next;
+            Next = frame;
+            return;
+        }
+
+        frame.Next.Add(frame);
     }
 }
