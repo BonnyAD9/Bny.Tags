@@ -22,11 +22,7 @@ public class ID3v2_3Tag
     /// <summary>
     /// Frames readed from the tag
     /// </summary>
-    private FrameCollection Frames { get; set; } = new();
-    /// <summary>
-    /// Gets enumerable collection of Frames
-    /// </summary>
-    public IEnumerable<Frame> FramesEnum => Frames;
+    public FrameCollection Frames { get; init; } = new();
 
     /// <summary>
     /// Reads ID3v2.3 tag from file

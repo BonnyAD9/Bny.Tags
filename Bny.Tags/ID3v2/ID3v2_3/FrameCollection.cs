@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bny.Tags.ID3v2.ID3v2_3;
 
-internal class FrameCollection : IEnumerable<Frame>
+public class FrameCollection : IEnumerable<Frame>
 {
     /// <summary>
     /// Contains all the frames
