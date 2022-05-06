@@ -185,7 +185,7 @@ public class TextFrame : Frame
     public string[] TextWriters
     {
         get => Information.Split('/');
-        set => string.Join('/', value);
+        set => Information = string.Join('/', value);
     }
 
     /// <summary>
