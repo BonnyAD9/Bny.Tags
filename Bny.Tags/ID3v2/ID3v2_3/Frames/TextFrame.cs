@@ -78,15 +78,16 @@ public class TextFrame : Frame
 
             for (int i = 0; i < info.Length; i++)
             {
-                if (addSpace)
-                    sb.Append(' ');
-
                 switch (info[i])
                 {
                     case '(':
                         if (++i >= info.Length || info[i] == '(')
                         {
                             sb.Append('(');
+                            if (!addSpace)
+                                break;
+                            sb.Append(' ');
+                            addSpace = false;
                             break;
                         }
 
@@ -94,6 +95,10 @@ public class TextFrame : Frame
                         if (ind < 0)
                         {
                             sb.Append('(');
+                            if (!addSpace)
+                                break;
+                            sb.Append(' ');
+                            addSpace = false;
                             break;
                         }
 
@@ -126,6 +131,10 @@ public class TextFrame : Frame
                         break;
                     default:
                         sb.Append(info[i]);
+                        if (!addSpace)
+                            break;
+                        sb.Append(' ');
+                        addSpace = false;
                         break;
                 }
             }
