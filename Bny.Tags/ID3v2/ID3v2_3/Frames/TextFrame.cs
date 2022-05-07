@@ -67,82 +67,10 @@ public class TextFrame : Frame
     /// <summary>
     /// Gets and sets the content type (genre)
     /// </summary>
-    public string ContentType
+    public Genre ContentType
     {
-        get
-        {
-            ReadOnlySpan<char> info = Information;
-            StringBuilder sb = new(info.Length);
-
-            bool addSpace = false;
-
-            for (int i = 0; i < info.Length; i++)
-            {
-                switch (info[i])
-                {
-                    case '(':
-                        if (++i >= info.Length || info[i] == '(')
-                        {
-                            sb.Append('(');
-                            if (!addSpace)
-                                break;
-                            sb.Append(' ');
-                            addSpace = false;
-                            break;
-                        }
-
-                        int ind = info[i..].IndexOf(')');
-                        if (ind < 0)
-                        {
-                            sb.Append('(');
-                            if (!addSpace)
-                                break;
-                            sb.Append(' ');
-                            addSpace = false;
-                            break;
-                        }
-
-                        var exm = info[i..(i + ind)];
-                        i += ind;
-
-                        if (exm.Equals("RX", StringComparison.Ordinal))
-                        {
-                            sb.Append("Remix");
-                            break;
-                        }
-
-                        if (exm.Equals("CR", StringComparison.Ordinal))
-                        {
-                            sb.Append("Cover");
-                            break;
-                        }
-
-                        if (!byte.TryParse(exm, out byte val))
-                        {
-                            sb.Append('(').Append(exm).Append(')');
-                            break;
-                        }
-
-                        addSpace = true;
-
-                        if (sb.Length > 0)
-                            sb.Append(' ');
-                        sb.Append(((ID3v1Genre)val).AsString());
-                        break;
-                    default:
-                        sb.Append(info[i]);
-                        if (!addSpace)
-                            break;
-                        sb.Append(' ');
-                        addSpace = false;
-                        break;
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        set => Information = value;
+        get => new(Information);
+        set => Information = value.ToString();
     }
 
     /// <summary>
@@ -236,6 +164,81 @@ public class TextFrame : Frame
     {
         get => TimeSpan.FromMilliseconds(double.Parse(Information));
         set => Information = ((ulong)value.TotalMilliseconds).ToString();
+    }
+}
+
+/// <summary>
+/// Represents the genre
+/// </summary>
+/// <param name="Genres">List of ID3v1 genres</param>
+/// <param name="Refainment">Additional string genre</param>
+public record Genre(List<ID3v1Genre> Genres, string Refainment)
+{
+    /// <summary>
+    /// Initializes the content type by parsing string
+    /// </summary>
+    /// <param name="ct">string to parse</param>
+    public Genre(ReadOnlySpan<char> ct) : this(new(), "")
+    {
+        for (int i = 0; i < ct.Length; i++)
+        {
+            if (ct[i] != '(')
+            {
+                Refainment = ct[i..].ToString();
+                return;
+            }
+
+            if (++i >= ct.Length)
+                return;
+
+            if (ct[i] == '(')
+            {
+                Refainment = ct[i..].ToString();
+                return;
+            }
+
+            int ind = ct[i..].IndexOf(')');
+            if (ind == -1)
+            {
+                Refainment = ct[(i - 1)..].ToString();
+                return;
+            }
+            ind += i;
+
+            if (ct[i..ind].Equals("RX", StringComparison.Ordinal))
+            {
+                Genres.Add(ID3v1Genre.Remix);
+                i = ind;
+                continue;
+            }
+
+            if (ct[i..ind].Equals("CR", StringComparison.Ordinal))
+            {
+                Genres.Add(ID3v1Genre.Cover);
+                i = ind;
+                continue;
+            }
+
+            if (!byte.TryParse(ct[i..ind], out byte b))
+            {
+                i = ind;
+                continue;
+            }
+
+            Genres.Add((ID3v1Genre)b);
+            i = ind;
+        }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new();
+        foreach (var g in Genres)
+            sb.Append('(').Append((byte)g).Append(')');
+        if (Refainment.StartsWith('('))
+            sb.Append('(');
+        sb.Append(Refainment);
+        return sb.ToString();
     }
 }
 
