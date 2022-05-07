@@ -284,3 +284,91 @@ public enum FileType : byte
     /// </summary>
     PCM,
 }
+
+/// <summary>
+/// Describes the media from which the sound originated
+/// </summary>
+[Flags]
+public enum MediaType : ushort
+{
+    // Main flags
+    Digital     = 0x1,
+    OtherAnalog = 0x2,
+    CD          = 0x3,
+    Laserdisk   = 0x4,
+    Turntable   = 0x5,
+    MiniDisk    = 0x6,
+    DAT         = 0x7,
+    DCC         = 0x8,
+    DVD         = 0x9,
+    Television  = 0xA,
+    Video       = 0xB,
+    Radio       = 0xC,
+    Telephone   = 0xD,
+    MC          = 0xE,
+    REE         = 0xF,
+
+#pragma warning disable CA1069 // Enums values should not be duplicated
+    // Used by multiple
+    Analog = 0b_0001_0000,
+
+    PAL   = 0b_0001_0000,
+    TNSC  = 0b_0010_0000,
+    SECAM = 0b_0100_0000,
+
+    Type1 = 0b_0001_0000,
+    Type2 = 0B_0010_0000,
+    Type3 = 0B_0100_0000,
+    Type4 = 0b_1000_0000,
+
+    // Same ID
+    ISDN     = 0b_0000__0001_0000,
+    Rpm76    = 0b_0001__0000_0000,
+    Cm76     = 0b_0001__0000_0000,
+    DATMode4 = 0b_0010__0000_0000,
+    Cm4_75   = 0b_0010__0000_0000,
+
+    // Other digital media
+    // Analog = 0b_0001_0000,
+
+    // Other Analog media
+    WaxCylinder  = 0b_0001_0000,
+    TapeCassette = 0b_0010_0000,
+
+    // CD
+    // Analog = 0b_0001__0000,
+    DDD       = 0b_0010__0000,
+    ADD       = 0b_0100__0000,
+    AAD       = 0b_1000__0000,
+
+    // Laserdisc
+    // Analog = 0b_0001_0000,
+
+    // Turntable records
+    Rpm33    = 0b_0000_0001_0000,
+    Rpm45    = 0b_0000_0010_0000,
+    Rpm71    = 0b_0000_0100_0000,
+    Rpm78    = 0b_0000_1000_0000,
+    // Rpm76 = 0b_0001_0000_0000,
+    Rpm80    = 0b_0010_0000_0000,
+
+    // MiniDisc
+    // Analog = 0b_0001_0000,
+
+    // DAT
+    // Analog   = 0b_0000__0001_0000,
+    DATStandard = 0b_0000__0010_0000,
+    DATMode1    = 0b_0000__0100_0000,
+    DATMode2    = 0b_0000__1000_0000,
+    DATMode3    = 0b_0001__0000_0000,
+    // DATMode4 = 0b_0010__0000_0000,
+    DATMode5    = 0b_0100__0000_0000,
+    DATMode6    = 0b_1000__0000_0000,
+
+    // DCC
+    // Analog = 0b_0001__0000,
+
+    // DVD
+    // Analog = 0b_0001__0000,
+#pragma warning restore CA1069 // Enums values should not be duplicated
+}
